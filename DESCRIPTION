@@ -1,8 +1,8 @@
 Package: minval
 Type: Package
 Title: MINimal VALidation for Stoichiometric Reactions
-Version: 0.1
-Date: 2016-01-29
+Version: 0.2
+Date: 2016-03-12
 Author: Daniel Osorio [aut,cre], Janneth Gonzalez [aut], Andres Pinzon-Velasco
     [aut]
 Maintainer: Daniel Osorio <dcosorioh@unal.edu.co>
@@ -11,8 +11,8 @@ Description: For a given set of stoichiometric reactions, this package evaluates
 License: GPL-2
 LazyData: TRUE
 NeedsCompilation: no
-Packaged: 2016-02-16 17:34:43 UTC; Daniel
+Packaged: 2016-03-13 20:20:41 UTC; Daniel
 Depends: R (>= 2.10)
 RoxygenNote: 5.0.1
 Repository: CRAN
-Date/Publication: 2016-02-16 23:48:42
+Date/Publication: 2016-03-14 07:54:26

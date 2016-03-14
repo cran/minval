@@ -1,20 +1,23 @@
-# reactants
+# reactants | Identifies the reactants for a stoichometric reaction
 # Daniel Camilo Osorio
 # Bioinformatics and Systems Biology Lab      | Universidad Nacional de Colombia
 # Experimental and Computational Biochemistry | Pontificia Universidad Javeriana
 
-reactants <- function(rxn){
+reactants <- function(reaction){
   # Identifies if stoichiometric reaction is not reversible. In this case:
-  if (length(grep("=",sub("(.*) <=> (.*)","\\1",rxn)))>0){
-    # Use a regex to extract stoichiometric coefficients and separate the metabolite name
-    # Return all the reactants
-    sub("^[[:digit:]]?.?[[:digit:]]+ ","\\2",strsplit(sub("(.*) => (.*)","\\1",rxn),fixed = TRUE,split = " + ")[[1]])
+  if (grepl("<=>",reaction)){
+    reactants <- unlist(strsplit(reaction,"<=>"))
   }
   # In contrary case:
   else {
-    # Use a regex to extract stoichiometric coefficients and separate the metabolite name
-    # Return both products and reactants
-    c(sub("^[[:digit:]]?.?[[:digit:]]+ ","\\2",strsplit(sub("(.*) <=> (.*)","\\1",rxn),fixed = TRUE,split = " + ")[[1]]),sub("^[[:digit:]]?.?[[:digit:]]+ ","\\2",strsplit(sub("(.*) <=> (.*)","\\2",rxn),fixed = TRUE,split = " + ")[[1]]))
+    reactants <- unlist(strsplit(reaction,"=>"))[1]
   }
+  # Split independient reactants
+  reactants <- unlist(strsplit(reactants,"[[:blank:]]\\+[[:blank:]]"))
+  reactants <- gsub("^[[:blank:]]","",reactants)
+  reactants <- gsub("[[:blank:]]$","",reactants)
+  # Use a regex to extract stoichiometric coefficients and separate the metabolite name
+  reactants <- gsub("^[[:digit:]]+[[:punct:]]?[[:digit:]]?[[:digit:]]?[[:blank:]]","",reactants)
+  return(reactants)
 }
 

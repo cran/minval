@@ -4,12 +4,12 @@
 # Experimental and Computational Biochemistry | Pontificia Universidad Javeriana
 
 .metname <- function(met, rm.coef = FALSE) {
-  if (rm.coef == FALSE) {
-    strsplit(met, paste("[", compartments(met), "]", sep = ""), fixed = TRUE)[[1]]
+  met <- gsub("^[[:blank:]]","",met)
+  met <- gsub("[[:blank:]]$","",met)
+  if (rm.coef == TRUE) {
+    met <- gsub("^[[:digit:]]+[[:punct:]]?[[:digit:]]?[[:digit:]]?[[:blank:]]","",met)
   }
-  else {
-    sub("^[0-9]+ ", "", strsplit(met, paste("[", compartments(met), "]", sep = ""), fixed = TRUE)[[1]])
-  }
+    gsub("\\[[[:graph:]]+[[:punct:]\\]$","",met)
 }
 
 .formula2matrix <- function(formula) {
@@ -23,9 +23,18 @@
 }
 
 .coeficients <- function(met) {
-  regmatches(met, gregexpr('^[0-9,.]', met))
+  regmatches(met, gregexpr('^[[:digit:]]+[[:punct:]]?[[:digit:]]?[[:digit:]]?[[:blank:]]', met))
 }
 
+.safe.index <- function(df, n){
+  tryCatch(df[n], error = function(e)return(rep(NA, nrow(df))))
+}
+
+.atoms <- function(metabolites) {
+  coef <- as.numeric(sapply(metabolites, .coeficients))
+  formula <- metabolites(metabolites)
+  unlist(mapply(function(coef, formula){rep(formula,coef)}, coef = coef, formula = formula,SIMPLIFY = FALSE))
+}
 # .rxnFromModel <- function(file){
 #   require(gdata)
 #   data <- gdata::read.xls(file , sheet = 1)

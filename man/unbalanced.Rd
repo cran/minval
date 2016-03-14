@@ -17,11 +17,11 @@ unbalanced(reaction,show.formulas)
 unbalanced("Phosphoenolpyruvate[c_n] => ATP[c_n] + Pyruvate[c_n] + Water[c_n]")
 # [1] TRUE
 
-unbalanced("Phosphoenolpyruvate[c_n] => ATP[c_n] + Pyruvate[c_n]",show.formulas = TRUE)
+unbalanced("Phosphoenolpyruvate[c_n] => ATP[c_n] + Pyruvate[c_n]", show.formulas = TRUE)
 #      [,1]                                                                          
-# [1,] "ADP[c_n] + Phosphoenolpyruvate[c_n] => ATP[c_n] + Pyruvate[c_n] + Water[c_n]"
+# [1,] "Phosphoenolpyruvate[c_n] => ATP[c_n] + Pyruvate[c_n]"
 #      [,2]                                                               
-# [1,] "1 C10H15N5O10P2 + 1 C3H4O6P => 1 C10H16N5O13P3 + 1 C3H3O3 + 1 H2O"
+# [1,] "1 C3H4O6P => 1 C10H16N5O13P3 + 1 C3H3O3"
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -9,5 +9,5 @@ chebi.id <- function(metabolite){
   data("chebi", envir = environment())
   chebi <- chebi
   # Search in ChEBI names and returns the ChEBI id for a metabolite
-  chebi[match(tolower(metabolite),tolower(chebi$name)),1]
-  }
+  .safe.index(chebi[chebi$name%in%tolower(metabolite),1],1)
+}

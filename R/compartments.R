@@ -5,10 +5,8 @@
 
 compartments <- function(metabolites){
   # Compartment main function
-  compartment<- function(met){
-    # Extract the letter between the [ ]
-    strsplit(strsplit(met,fixed=TRUE,split="[")[[1]][length(strsplit(met,fixed=TRUE,split="[")[[1]])],fixed = TRUE,split = "]")[[1]]
-  }
-  # Extract the compartments for a set of stoichiometric reaction
-  unique(sapply(metabolites,compartment))
+  compartments <- unique(unlist(regmatches(metabolites, gregexpr("\\[[[:graph:]]+[[:punct:]\\]$", metabolites))))
+  compartments <- gsub("\\[","",compartments)
+  compartments <- gsub("\\]","",compartments)
+  return(compartments)
 }

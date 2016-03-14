@@ -9,5 +9,5 @@ chebi.formula <- function(metabolite){
   data("chebi", envir = environment())
   chebi <- chebi
   # Search in ChEBI database for a molecular formula based in metabolite name
-  chebi[match(tolower(metabolite),tolower(chebi$name)),4]
+  .safe.index(chebi[chebi$name%in%tolower(metabolite),4],1)
 }
