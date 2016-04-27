@@ -9,20 +9,20 @@ toChEBI <- function(reaction, formula = FALSE) {
   reversible <- grepl("<=>",reaction)
   if (reversible) {
     reaction<-unlist(strsplit(reaction,"<=>",fixed = TRUE))
-    reaction <- gsub("^[[:blank:]]","",reaction)
-    reaction <- gsub("[[:blank:]]$","",reaction)
+    reaction <- gsub("^[[:blank:]]*","",reaction)
+    reaction <- gsub("[[:blank:]]*$","",reaction)
   } else {
     reaction<-unlist(strsplit(reaction,"=>",fixed = TRUE))
-    reaction <- gsub("^[[:blank:]]","",reaction)
-    reaction <- gsub("[[:blank:]]$","",reaction)
+    reaction <- gsub("^[[:blank:]]*","",reaction)
+    reaction <- gsub("[[:blank:]]*$","",reaction)
   }
   reactant <- reaction[1]
   product <- reaction[2]
   reactant <- unlist(strsplit(reactant,"[[:blank:]]\\+[[:blank:]]"))
   product <- unlist(strsplit(product,"[[:blank:]]\\+[[:blank:]]"))
-  r_coef <- as.numeric(sapply(reactant, .coeficients))
+  r_coef <- suppressWarnings(as.numeric(sapply(reactant, .coeficients)))
   r_coef[is.na(r_coef)] <- 1
-  p_coef <- as.numeric(sapply(product, .coeficients))
+  p_coef <- suppressWarnings(as.numeric(sapply(product, .coeficients)))
   p_coef[is.na(p_coef)] <- 1
   
   if (formula == FALSE){

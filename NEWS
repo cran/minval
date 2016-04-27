@@ -1,5 +1,9 @@
 NEWS
 ====
+**minval v.0.3**
+* A bug in products function was solved
+* A bug related with spaces between metabolites was solved in several functions
+
 **minval v.0.2**
 * Some functions were rewrited
 * A bug in the compartments function was solved.
