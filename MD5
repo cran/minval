@@ -1,6 +1,6 @@
-3a5a356fe06570a2ba86a0f4b2e46355 *DESCRIPTION
+44787b5d13616da33c9beb5557c12cc7 *DESCRIPTION
 6588c204492513f85ce92bf1cde79b28 *NAMESPACE
-23b8f1b8443c14b409ed34580b78a224 *NEWS
+237a9df548419cab92414d46938c7077 *NEWS
 2e2e57798c522caa7451b08eaf4a742f *R/chebi.candidates.R
 3a83c34a932c7a34bf7898073f0066c9 *R/chebi.formula.R
 e52c5fd9e9927fce415da11bdfce2e43 *R/chebi.id.R
@@ -11,10 +11,11 @@ b6f25525b760f109b27d9c35cc768f50 *R/compartments.R
 0d424b2eee541dfbdd4228d103999bc6 *R/minval-internal.R
 bf59d69166389986deda00fa564a0602 *R/orphan.products.R
 1d0bb7da81c1d76995dd7d91840cde59 *R/orphan.reactants.R
-5ee445e0334df045d19a3f226e0b9dbe *R/products.R
-db0cf87adac348ffbdd31bc341c34269 *R/reactants.R
+be4446c8ca177f8496a13978a985f60d *R/products.R
+9510b784630fd1e783676212d6c1d05f *R/reactants.R
 06843806888893c416feaf92ee1e3e65 *R/toChEBI.R
 f403763899b59fb135771bda46d0ef4b *R/unbalanced.R
+572a5ebc636fe0f58c02064a29b3d764 *README.md
 07e2b0006c9aa6b2696b204e6235d8cc *data/chebi.RData
 3f7fdf3ad149de5e3cd78958fa8b3645 *data/datalist
 4ed2614499d9f8a5cce0a89feb5143ee *data/glugln.RData
@@ -39,7 +40,7 @@ be630f95263182d2244a926e83983b2a *man/chebi.id.Rd
 e015d73cbd5d6f97aced6fc787017aa4 *man/is.chebi.Rd
 5e53f07305ba1fc034514552ea947bb1 *man/is.validsyntax.Rd
 a92f21973ba59bfb335ef97a0a139850 *man/metabolites.Rd
-946f647653b9bec980bb531a54fd6102 *man/minval-package.Rd
+085e9ad7873c3ad011faa2336cdd99c4 *man/minval-package.Rd
 406f03ebf43d7829c87b340605d4e4e3 *man/orphan.products.Rd
 6c5d39a835314dd002aaa8f96e277328 *man/orphan.reactants.Rd
 c77ee3e892716ec0cb31fb71409b07a5 *man/products.Rd
