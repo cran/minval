@@ -1,6 +1,6 @@
-minval
+minval : an R package for MINimal VALidation of stoichiometric reactions
 ======
-A package to evaluate the mass balance and extract all reactants, products, orphan metabolites, metabolite names and compartments of stoichiometric reactions. Also are included some options to check the compound names associated to ChEBI database.
+The **MINVAL** package was designed as a tool to identify orphan metabolites and evaluate the mass and charge balance of stoichometric reactions. **MINVAL** also includes functions to write models in TSV and SBML formats, extract all reactants, products, metabolite names and compartments from a metabolic reconstruction. 
 
 Install:
 --------
@@ -13,35 +13,37 @@ install.packages("minval", dependencies=TRUE)
 If you have devtools installed, install the latest stable version this package directly from GitHub:
 
 ```
-library(devtools)
-install_github("dosorio/minval")
-library(minval)
+# Install 'devtools' R package
+install.packages("devtools")
+
+# LINUX users must install 'libxml' before install 'minval'. Just open a terminal and type:
+sudo apt-get install libxml2-dev
+
+# Install 'minval' package
+devtools::install_github("gibbslab/minval")
+library("minval"")
 ```
+
 Available functions:
 -------------------
 |Function | Description |
 |:--------|:------------|
-|chebi.candidates|Returns the possible ChEBI names based on compound synonyms|
-|chebi.formula|Returns the molecular formula associated to a ChEBI compound name|
-|chebi.id|Returns the ChEBI id asociated to a compound name|
-|compartments|Identifies the compartments for a set of metabolites|
-|is.chebi|Evaluates if a compound name is a ChEBI name|
-|is.validsyntax|Evaluates if a stoichiometric reaction has a valid syntax|
-|metabolites|Identifies the list of unique metabolites for a set of stoichiometric reactions|
-|orphan.products|Identifies the orphan products for a set of stoichometric reactions|
-|orphan.reactant|Identifies the orphan reactants for a set of stoichometric reactions|
-|products|Identifies the products for a stoichometric reaction|
-|reactants|Identifies the reactants for a stoichometric reaction|
-|toChEBI|Translates compounds names to ChEBI ids or molecular formulas in a stoichiometric reaction|
-|unbalances|Evaluates if a stoichiometric reaction is mass-balanced|
-
-Available datasets
--------------------
-| Code        | Description |
-|:----------- |:------------|
-|chebi|Public data from ChEBI database release 136|
-|glugln|Stoichiometric reactions from the reconstructon of the glutamate/glutamine cycle|
+|compartments|Extract the list of unique compartments for the metabolites of a set of stoichiometric reactions.|
+|convert2sbml|Write a model in a SBML format.|
+|convert2sbmlR|Convert a data.frame data to a SBMLR object|
+|writeTSVmod|Write a model in a TSV format for the 'sybil' R package.|
+|getChEBI|Download the ChEBI database|
+|isBalanced|Evaluate the mass or charge balance for a set of stoichiometric reactions|
+|isValidSyntax|Evaluate if a stoichiometric reaction has a valid syntax|
+|mapReactions|Return reactions of a reference data by a selected column|
+|metabolites|Identify the list of metabolites for a set of stoichiometric reactions|
+|orphanProducts|Identify the orphan products of a set of stoichometric reactions|
+|orphanReactants|Identify the orphan reactants of a set of stoichometric reactions|
+|products|Identify the products of a stoichometric reaction|
+|reactants|Identify the reactants of a stoichometric reaction|
+|stoichiometricMatrix|Return the stoichiometric matrix for a set of stoichiometric reactions|
+|xls2sbml|Write a model in SBML format from a XLS spreadsheet|
 
 Citation
 --------
-Daniel Osorio, Janneth Gonzalez and Andres Pinzon-Velasco (2016). **minval: MINimal VALidation for Stoichiometric Reactions**. R package version 0.1. https://CRAN.R-project.org/package=minval
+Daniel Osorio, Janneth Gonzalez and Andres Pinzon-Velasco (2016). **minval: MINimal VALidation for Stoichiometric Reactions**. R package version 0.5. https://CRAN.R-project.org/package=minval
