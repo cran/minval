@@ -1,4 +1,4 @@
-44533925f98409b47b5e2188067b9d7d *DESCRIPTION
+14484019e146e71cd3404747a13f4745 *DESCRIPTION
 a0098cfd2660ae942bd8686a8b46e004 *NAMESPACE
 4be02ccf2de43cce72d1ee703cec870e *NEWS.md
 b737479f5b53e8649ac60f87ebc2e588 *R/characterizeReactions.R
@@ -16,9 +16,9 @@ d50baaf454a4ba174b928877af1aaf8f *R/reactants.R
 631ea98dc54ea7d818c5ba0a2b3e7a48 *R/writeTSVmod.R
 c571de8fdcaedd2da60396604e1e5dfe *README.md
 93f4692120ed569a102ea56716e5820d *build/vignette.rds
-29dfb8acb64d2a93428d7e60d999cb22 *inst/doc/MINVALintroduction.R
-c94a9f66d40e8a9553d86149e9aac3a0 *inst/doc/MINVALintroduction.Rmd
-feb05cfa4a65d9ccecffb53841d8f5a9 *inst/doc/MINVALintroduction.html
+c29eba552a3ab383e9f7c1e81f87d269 *inst/doc/MINVALintroduction.R
+bc865acd68f08ff923b322d65a9a55a4 *inst/doc/MINVALintroduction.Rmd
+3865e95b969cf9c29aa2c1aa2b3e58b0 *inst/doc/MINVALintroduction.html
 21f55527e9a1ebd21a8f3609c4fd3f74 *inst/doc/characterizeReactions.R
 97b4e54e45afaea53d88afb5e811907b *inst/doc/characterizeReactions.Rmd
 77ce28210c0b922d9c0be6eb2e7c1a91 *inst/doc/characterizeReactions.html
@@ -50,5 +50,5 @@ e5e2e2ae5e3b57029c87087b820206d0 *tests/testthat/test.reactants.R
 44f9070f8764b53733eebf7ab07ff0be *tests/testthat/test.reactionType.R
 2767c89a5741c935e32d53d71ea94dc1 *tests/testthat/test.stoichiometricMatrix.R
 231ca4705fc7b2c65a372df07d0ed83b *tests/testthat/test.validateSyntax.R
-c94a9f66d40e8a9553d86149e9aac3a0 *vignettes/MINVALintroduction.Rmd
+bc865acd68f08ff923b322d65a9a55a4 *vignettes/MINVALintroduction.Rmd
 97b4e54e45afaea53d88afb5e811907b *vignettes/characterizeReactions.Rmd

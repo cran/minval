@@ -7,6 +7,8 @@ knitr::opts_chunk$set(collapse = TRUE, dev = "png", fig.width = 7, fig.height = 
 ## ---- message=FALSE------------------------------------------------------
 library("minval")
 library("sybilSBML")
+library("sybil")
+library("glpkAPI")
 
 ## ---- eval= FALSE--------------------------------------------------------
 #  "H2O[c] + Urea-1-Carboxylate[c] <=> 2 CO2[c] + 2 NH3[c]"
