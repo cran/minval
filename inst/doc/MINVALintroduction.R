@@ -6,7 +6,7 @@ knitr::opts_chunk$set(collapse = TRUE, dev = "png", fig.width = 7, fig.height = 
 
 ## ---- message=FALSE------------------------------------------------------
 library("minval")
-library("sybilSBML")
+#library("sybilSBML")
 library("sybil")
 library("glpkAPI")
 
@@ -41,11 +41,11 @@ writeSBMLmod(modelData = glycolysis,
           )
 
 ## ------------------------------------------------------------------------
-glycoModel <- sybilSBML::readSBMLmod("glycolysis.xml")
-glycoModel
+# glycoModel <- sybilSBML::readSBMLmod("glycolysis.xml")
+# glycoModel
 
 ## ------------------------------------------------------------------------
-sybil::optimizeProb(glycoModel)
+# sybil::optimizeProb(glycoModel)
 
 ## ------------------------------------------------------------------------
 validateSyntax(reactionList = glycolysis$REACTION)
@@ -83,7 +83,7 @@ writeSBMLmod(modelData = glycolysis,
           outputFile = "glycolysisBalanced.xml"
           )
 
-sybil::optimizeProb(sybilSBML::readSBMLmod("glycolysisBalanced.xml"))
+# sybil::optimizeProb(sybilSBML::readSBMLmod("glycolysisBalanced.xml"))
 
 ## ------------------------------------------------------------------------
 checkBalance(reactionList = glycolysis$REACTION,

@@ -1,6 +1,12 @@
 NEWS
 ====
 
+#### **minval v.0.8-1**
+
+* An error with the downloadChEBI function when it was used in Windows OS was solved.
+* The citation file was added.
+* The link with sybilSBML was removed due the package was removed from CRAN
+
 #### **minval v.0.8**
 
 * validateSyntax function now returns FALSE values instead error return
