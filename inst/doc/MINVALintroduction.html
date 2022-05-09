@@ -1,64 +1,328 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Daniel Osorio, Janneth Gonzalez and Andres Pinzon" />
 
 
 <title>MINVAL - MINimal VALidation for Stoichiometric Reactions</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
-
-<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -67,326 +331,428 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">MINVAL - <strong>MIN</strong>imal <strong>VAL</strong>idation for Stoichiometric Reactions</h1>
-<h4 class="author"><em>Daniel Osorio, Janneth Gonzalez and Andres Pinzon</em></h4>
+<h1 class="title toc-ignore">MINVAL - <strong>MIN</strong>imal
+<strong>VAL</strong>idation for Stoichiometric Reactions</h1>
+<h4 class="author">Daniel Osorio, Janneth Gonzalez and Andres
+Pinzon</h4>
 
 
 
 <div id="introduction-to-minval" class="section level3">
 <h3>Introduction to MINVAL</h3>
-<p>The <strong>MINVAL</strong> package was designed as a tool to identify orphan metabolites and evaluate the mass and charge balance of stoichiometric reactions. The package also includes functions to characterize and write models in TSV and SBML formats, extract all reactants, products, metabolite names and compartments from a metabolic reconstruction. It is available through CRAN repositories, to install it just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;minval&quot;</span>)</code></pre></div>
-<p><strong>MINVAL</strong> package includes twelve functions designed to characterize, check and depurate metabolic reconstructions before its interrogation through Flux Balance Analysis (FBA). FBA methods are available for the R language in the <code>&quot;sybil&quot;</code> (<strong>Sy</strong>stems <strong>Bi</strong>ology <strong>L</strong>ibrary) package. To load required packages just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;minval&quot;</span>)
-<span class="co">#library(&quot;sybilSBML&quot;)</span>
-<span class="kw">library</span>(<span class="st">&quot;sybil&quot;</span>)
-<span class="kw">library</span>(<span class="st">&quot;glpkAPI&quot;</span>)</code></pre></div>
+<p>The <strong>MINVAL</strong> package was designed as a tool to
+identify orphan metabolites and evaluate the mass and charge balance of
+stoichiometric reactions. The package also includes functions to
+characterize and write models in TSV and SBML formats, extract all
+reactants, products, metabolite names and compartments from a metabolic
+reconstruction. It is available through CRAN repositories, to install it
+just type:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;minval&quot;</span>)</span></code></pre></div>
+<p><strong>MINVAL</strong> package includes twelve functions designed to
+characterize, check and depurate metabolic reconstructions before its
+interrogation through Flux Balance Analysis (FBA). FBA methods are
+available for the R language in the <code>&quot;sybil&quot;</code>
+(<strong>Sy</strong>stems <strong>Bi</strong>ology
+<strong>L</strong>ibrary) package. To load required packages just
+type:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;minval&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#library(&quot;sybilSBML&quot;)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;sybil&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;glpkAPI&quot;</span>)</span></code></pre></div>
 </div>
 <div id="metabolic-models" class="section level3">
 <h3>Metabolic Models</h3>
-<p>Metabolic models are sets of stoichiometric reactions that represents a process where a set of chemical compounds called reactants are converted into others called products. In a stoichiometric reaction, all the reactants are placed on the left and the products on the right separated by an arrow symbol which indicates the direction of the reaction. Some examples of valid stoichiometric reactions are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="st">&quot;H2O[c] + Urea-1-Carboxylate[c] &lt;=&gt; 2 CO2[c] + 2 NH3[c]&quot;</span>
-<span class="st">&quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;</span>
-<span class="st">&quot;CO2[c] &lt;=&gt;&quot;</span></code></pre></div>
-<p><strong>MINVAL</strong> can extract both, reactants and products for a set of stoichiometric reactions through the <code>reactants</code> and <code>products</code> functions as follows:</p>
+<p>Metabolic models are sets of stoichiometric reactions that represents
+a process where a set of chemical compounds called reactants are
+converted into others called products. In a stoichiometric reaction, all
+the reactants are placed on the left and the products on the right
+separated by an arrow symbol which indicates the direction of the
+reaction. Some examples of valid stoichiometric reactions are:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;H2O[c] + Urea-1-Carboxylate[c] &lt;=&gt; 2 CO2[c] + 2 NH3[c]&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;CO2[c] &lt;=&gt;&quot;</span></span></code></pre></div>
+<p><strong>MINVAL</strong> can extract both, reactants and products for
+a set of stoichiometric reactions through the <code>reactants</code> and
+<code>products</code> functions as follows:</p>
 <ul>
-<li>If the reaction is irreversible <code>&quot;=&gt;&quot;</code> then reactants and products are separated and returned afterward.</li>
+<li>If the reaction is irreversible <code>&quot;=&gt;&quot;</code> then reactants
+and products are separated and returned afterward.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">reactants</span>(<span class="dt">reactionList =</span> <span class="st">&quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;</span>)
-## [1] &quot;ADP[c]&quot;                 &quot;Phosphoenolpyruvate[c]&quot;
-<span class="kw">products</span>(<span class="dt">reactionList =</span> <span class="st">&quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;</span>)
-## [1] &quot;ATP[c]&quot;      &quot;Pyruvate[c]&quot;</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reactants</span>(<span class="at">reactionList =</span> <span class="st">&quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;ADP[c]&quot;                 &quot;Phosphoenolpyruvate[c]&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">products</span>(<span class="at">reactionList =</span> <span class="st">&quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;ATP[c]&quot;      &quot;Pyruvate[c]&quot;</span></span></code></pre></div>
 <ul>
-<li>If the reaction is reversible <code>&quot;&lt;=&gt;&quot;</code> then all reactants at some point can act as products and <em>vice versa</em>, for that reason both functions return all reaction metabolites.</li>
+<li>If the reaction is reversible <code>&quot;&lt;=&gt;&quot;</code> then all
+reactants at some point can act as products and <em>vice versa</em>, for
+that reason both functions return all reaction metabolites.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">reactants</span>(<span class="dt">reactionList =</span> <span class="st">&quot;H2O[c] + Urea-1-Carboxylate[c] &lt;=&gt; 2 CO2[c] + 2 NH3[c]&quot;</span>)
-## [1] &quot;H2O[c]&quot;                &quot;Urea-1-Carboxylate[c]&quot; &quot;CO2[c]&quot;               
-## [4] &quot;NH3[c]&quot;
-<span class="kw">products</span>(<span class="dt">reactionList =</span> <span class="st">&quot;H2O[c] + Urea-1-Carboxylate[c] &lt;=&gt; 2 CO2[c] + 2 NH3[c]&quot;</span>)
-## [1] &quot;H2O[c]&quot;                &quot;Urea-1-Carboxylate[c]&quot; &quot;CO2[c]&quot;               
-## [4] &quot;NH3[c]&quot;</code></pre></div>
-<p>To show the potential use of the <strong>MINVAL</strong> package a human-readable model composed by a set of 19 stoichiometric reactions that represent an unbalanced model of the glycolysis process was included. To load it just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glycolysis &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">file =</span> <span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;glycolysisModel.csv&quot;</span>,
-                                          <span class="dt">package =</span> <span class="st">&quot;minval&quot;</span>), 
-                        <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>,
-                        <span class="dt">sep =</span> <span class="st">'</span><span class="ch">\t</span><span class="st">'</span>
-                        )
-glycolysis<span class="op">$</span>REACTION
-##  [1] &quot;2-Phospho-D-glycerate[c] &lt;=&gt; Phosphoenolpyruvate[c] + H2O[c]&quot;                                                            
-##  [2] &quot;D-Glyceraldehyde 3-phosphate[c] &lt;=&gt; Glycerone phosphate[c]&quot;                                                              
-##  [3] &quot;D-Glyceraldehyde 3-phosphate[c] + Orthophosphate[c] + NAD+[c] &lt;=&gt; 3 3-Phospho-D-glyceroyl phosphate[c] + NADH[c] + H+[c]&quot;
-##  [4] &quot;beta-D-Fructose 1,6-bisphosphate[c] &lt;=&gt; Glycerone phosphate[c] + D-Glyceraldehyde 3-phosphate[c]&quot;                        
-##  [5] &quot;ATP[c] + 3-Phospho-D-glycerate[c] &lt;=&gt; ADP[c] + 3-Phospho-D-glyceroyl phosphate[c]&quot;                                       
-##  [6] &quot;2-Phospho-D-glycerate[c] &lt;=&gt; 3-Phospho-D-glycerate[c]&quot;                                                                   
-##  [7] &quot;ATP[c] + alpha-D-Glucose[c] =&gt; ADP[c] + alpha-D-Glucose 6-phosphate[c]&quot;                                                  
-##  [8] &quot;alpha-D-Glucose 6-phosphate[c] &lt;=&gt; beta-D-Fructose 6-phosphate[c]&quot;                                                       
-##  [9] &quot;ATP[c] + beta-D-Fructose 6-phosphate[c] =&gt; ADP[c] + beta-D-Fructose 1,6-bisphosphate[c]&quot;                                 
-## [10] &quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;                                                                 
-## [11] &quot;H2O[c] &lt;=&gt;&quot;                                                                                                              
-## [12] &quot;NAD+[c] &lt;=&gt;&quot;                                                                                                             
-## [13] &quot;NADH[c] &lt;=&gt;&quot;                                                                                                             
-## [14] &quot;Orthophosphate[c] &lt;=&gt;&quot;                                                                                                   
-## [15] &quot;H+[c] &lt;=&gt;&quot;                                                                                                               
-## [16] &quot;ATP[c] &lt;=&gt;&quot;                                                                                                              
-## [17] &quot;alpha-D-Glucose[c] &lt;=&gt;&quot;                                                                                                  
-## [18] &quot;Pyruvate[c] &lt;=&gt;&quot;                                                                                                         
-## [19] &quot;ADP[c] &lt;=&gt;&quot;</code></pre></div>
-<p>Metabolic models include also another additional information related to the stoichiometric reactions. The generally associated information is:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reactants</span>(<span class="at">reactionList =</span> <span class="st">&quot;H2O[c] + Urea-1-Carboxylate[c] &lt;=&gt; 2 CO2[c] + 2 NH3[c]&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;H2O[c]&quot;                &quot;Urea-1-Carboxylate[c]&quot; &quot;CO2[c]&quot;               </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [4] &quot;NH3[c]&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">products</span>(<span class="at">reactionList =</span> <span class="st">&quot;H2O[c] + Urea-1-Carboxylate[c] &lt;=&gt; 2 CO2[c] + 2 NH3[c]&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;H2O[c]&quot;                &quot;Urea-1-Carboxylate[c]&quot; &quot;CO2[c]&quot;               </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [4] &quot;NH3[c]&quot;</span></span></code></pre></div>
+<p>To show the potential use of the <strong>MINVAL</strong> package a
+human-readable model composed by a set of 19 stoichiometric reactions
+that represent an unbalanced model of the glycolysis process was
+included. To load it just type:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>glycolysis <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;glycolysisModel.csv&quot;</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">package =</span> <span class="st">&quot;minval&quot;</span>), </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sep =</span> <span class="st">&#39;</span><span class="sc">\t</span><span class="st">&#39;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>glycolysis<span class="sc">$</span>REACTION</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;2-Phospho-D-glycerate[c] &lt;=&gt; Phosphoenolpyruvate[c] + H2O[c]&quot;                                                            </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  [2] &quot;D-Glyceraldehyde 3-phosphate[c] &lt;=&gt; Glycerone phosphate[c]&quot;                                                              </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] &quot;D-Glyceraldehyde 3-phosphate[c] + Orthophosphate[c] + NAD+[c] &lt;=&gt; 3 3-Phospho-D-glyceroyl phosphate[c] + NADH[c] + H+[c]&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] &quot;beta-D-Fructose 1,6-bisphosphate[c] &lt;=&gt; Glycerone phosphate[c] + D-Glyceraldehyde 3-phosphate[c]&quot;                        </span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] &quot;ATP[c] + 3-Phospho-D-glycerate[c] &lt;=&gt; ADP[c] + 3-Phospho-D-glyceroyl phosphate[c]&quot;                                       </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  [6] &quot;2-Phospho-D-glycerate[c] &lt;=&gt; 3-Phospho-D-glycerate[c]&quot;                                                                   </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] &quot;ATP[c] + alpha-D-Glucose[c] =&gt; ADP[c] + alpha-D-Glucose 6-phosphate[c]&quot;                                                  </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  [8] &quot;alpha-D-Glucose 6-phosphate[c] &lt;=&gt; beta-D-Fructose 6-phosphate[c]&quot;                                                       </span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] &quot;ATP[c] + beta-D-Fructose 6-phosphate[c] =&gt; ADP[c] + beta-D-Fructose 1,6-bisphosphate[c]&quot;                                 </span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] &quot;ADP[c] + Phosphoenolpyruvate[c] =&gt; ATP[c] + Pyruvate[c]&quot;                                                                 </span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] &quot;H2O[c] &lt;=&gt;&quot;                                                                                                              </span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [12] &quot;NAD+[c] &lt;=&gt;&quot;                                                                                                             </span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] &quot;NADH[c] &lt;=&gt;&quot;                                                                                                             </span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [14] &quot;Orthophosphate[c] &lt;=&gt;&quot;                                                                                                   </span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] &quot;H+[c] &lt;=&gt;&quot;                                                                                                               </span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] &quot;ATP[c] &lt;=&gt;&quot;                                                                                                              </span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] &quot;alpha-D-Glucose[c] &lt;=&gt;&quot;                                                                                                  </span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="do">## [18] &quot;Pyruvate[c] &lt;=&gt;&quot;                                                                                                         </span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] &quot;ADP[c] &lt;=&gt;&quot;</span></span></code></pre></div>
+<p>Metabolic models include also another additional information related
+to the stoichiometric reactions. The generally associated information
+is:</p>
 <ul>
-<li><strong>ID:</strong> A list of single character strings containing the reaction abbreviations, Entries in the field abbreviation are used as reaction ids, so they must be unique.</li>
-<li><strong>REACTION:</strong> A set of stoichiometric reaction with the following characteristics:
+<li><strong>ID:</strong> A list of single character strings containing
+the reaction abbreviations, Entries in the field abbreviation are used
+as reaction ids, so they must be unique.</li>
+<li><strong>REACTION:</strong> A set of stoichiometric reaction with the
+following characteristics:
 <ul>
-<li>Arrows symbols must be given in the form <code>'=&gt;'</code> or <code>'&lt;=&gt;'</code></li>
-<li>Inverse arrow symbols <code>'&lt;='</code> or other types as: <code>'--&gt;'</code>, <code>'&lt;==&gt;'</code>, <code>'-&gt;'</code> will not be parsed and will lead to errors.</li>
-<li>Arrow symbols and plus signs (<code>+</code>) must be surrounded by a space character.</li>
-<li>Stoichiometric coefficients must be surrounded by a space character and not by parentheses.</li>
-<li>Each metabolite must have only one stoichiometric coefficient, substituents must be joined to metabolite name by a hyphen (<code>-</code>) symbol.</li>
-<li>Exchange reactions must have only one metabolite before arrow symbol.</li>
-<li>Compartments must be given between square brackets (<code>[compartment]</code>) joined at the end of metabolite name.</li>
+<li>Arrows symbols must be given in the form <code>&#39;=&gt;&#39;</code> or
+<code>&#39;&lt;=&gt;&#39;</code></li>
+<li>Inverse arrow symbols <code>&#39;&lt;=&#39;</code> or other types as:
+<code>&#39;--&gt;&#39;</code>, <code>&#39;&lt;==&gt;&#39;</code>, <code>&#39;-&gt;&#39;</code>
+will not be parsed and will lead to errors.</li>
+<li>Arrow symbols and plus signs (<code>+</code>) must be surrounded by
+a space character.</li>
+<li>Stoichiometric coefficients must be surrounded by a space character
+and not by parentheses.</li>
+<li>Each metabolite must have only one stoichiometric coefficient,
+substituents must be joined to metabolite name by a hyphen
+(<code>-</code>) symbol.</li>
+<li>Exchange reactions must have only one metabolite before arrow
+symbol.</li>
+<li>Compartments must be given between square brackets
+(<code>[compartment]</code>) joined at the end of metabolite name.</li>
 </ul></li>
-<li><strong>GPR:</strong> A set of genes joined by boolean operators as <code>AND</code> or <code>OR</code>, rules may be nested by parenthesis. (optional: column can be empty)</li>
-<li><strong>LOWER.BOUND:</strong> A list of numeric values containing the lower bounds of the reaction rates. If not set, zero is used for an irreversible reaction and -1000 for a reversible reaction. (optional: column can be empty)</li>
-<li><strong>UPPER.BOUND:</strong> list of numeric values containing the upper bounds of the reaction rates. If not set, 1000 is used by default. (optional: column can be empty)</li>
-<li><strong>OBJECTIVE:</strong> A list of numeric values containing objective values (0 or 1) for each reaction (optional: column can be empty)</li>
+<li><strong>GPR:</strong> A set of genes joined by boolean operators as
+<code>AND</code> or <code>OR</code>, rules may be nested by parenthesis.
+(optional: column can be empty)</li>
+<li><strong>LOWER.BOUND:</strong> A list of numeric values containing
+the lower bounds of the reaction rates. If not set, zero is used for an
+irreversible reaction and -1000 for a reversible reaction. (optional:
+column can be empty)</li>
+<li><strong>UPPER.BOUND:</strong> list of numeric values containing the
+upper bounds of the reaction rates. If not set, 1000 is used by default.
+(optional: column can be empty)</li>
+<li><strong>OBJECTIVE:</strong> A list of numeric values containing
+objective values (0 or 1) for each reaction (optional: column can be
+empty)</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(glycolysis)
-## [1] &quot;ID&quot;          &quot;DESCRIPTION&quot; &quot;REACTION&quot;    &quot;GPR&quot;         &quot;LOWER.BOUND&quot;
-## [6] &quot;UPPER.BOUND&quot; &quot;OBJECTIVE&quot;</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(glycolysis)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;ID&quot;          &quot;DESCRIPTION&quot; &quot;REACTION&quot;    &quot;GPR&quot;         &quot;LOWER.BOUND&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [6] &quot;UPPER.BOUND&quot; &quot;OBJECTIVE&quot;</span></span></code></pre></div>
 </div>
 <div id="sbml-files" class="section level3">
 <h3>SBML files</h3>
-<p>The standard format to share and store biological processes such as metabolic models is the Systems Biology Markup Language (SBML) format. <strong>MINVAL</strong> package includes the <code>&quot;writeSBMLmod&quot;</code> function which is able to write models in SBML (<code>level = 2</code>, <code>version = 1</code>) format as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">writeSBMLmod</span>(<span class="dt">modelData =</span> glycolysis,
-          <span class="dt">modelID =</span> <span class="st">&quot;Glycolysis&quot;</span>,
-          <span class="dt">outputFile =</span> <span class="st">&quot;glycolysis.xml&quot;</span>
-          )</code></pre></div>
-<p>Metabolic models in SBML format can be readed through the <code>readSBMLmod</code> function of the <code>sybilSBML</code> R package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># glycoModel &lt;- sybilSBML::readSBMLmod(&quot;glycolysis.xml&quot;)</span>
-<span class="co"># glycoModel</span></code></pre></div>
-<p>After load the metabolic model, it can be interrogated through FBA using the <code>optimizeProb</code> function of the <code>sybil</code> R package. In this case, the reaction <code>R00200</code> was set as the objective function. The <code>R00200</code> reaction describes the production of pyruvate from phosphoenolpyruvate an alpha-D-Glucose derivate.</p>
-<p>Glycolysis pathway can be summarized as: <code>1 alpha-D-Glucose[c] + 2 NAD+[c] + 2 ADP[c] + 2 Orthophosphate[c] =&gt; 2 Pyruvate[c] + 2 NADH[c] + 2 H+[c] + 2 ATP[c] + 2 H2O[c]</code> where the metabolism of one molecule of alpha-D-Glucose yield two molecules of pyruvate.</p>
-<p>As is shown below, interrogated glycolysis model estimates a production of six molecules of pyruvate by each alpha-D-Glucose molecule due a mass unbalance. FBA methods are sensitive to thermodynamic (mass-charge) unbalance, so in order to achieve a valid biological extrapolation is mandatory to avoid this type of unbalancing in all model reactions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sybil::optimizeProb(glycoModel)</span></code></pre></div>
+<p>The standard format to share and store biological processes such as
+metabolic models is the Systems Biology Markup Language (SBML) format.
+<strong>MINVAL</strong> package includes the <code>&quot;writeSBMLmod&quot;</code>
+function which is able to write models in SBML (<code>level = 2</code>,
+<code>version = 1</code>) format as follows:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeSBMLmod</span>(<span class="at">modelData =</span> glycolysis,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">modelID =</span> <span class="st">&quot;Glycolysis&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">outputFile =</span> <span class="st">&quot;glycolysis.xml&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>          )</span></code></pre></div>
+<p>Metabolic models in SBML format can be readed through the
+<code>readSBMLmod</code> function of the <code>sybilSBML</code> R
+package.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># glycoModel &lt;- sybilSBML::readSBMLmod(&quot;glycolysis.xml&quot;)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># glycoModel</span></span></code></pre></div>
+<p>After load the metabolic model, it can be interrogated through FBA
+using the <code>optimizeProb</code> function of the <code>sybil</code> R
+package. In this case, the reaction <code>R00200</code> was set as the
+objective function. The <code>R00200</code> reaction describes the
+production of pyruvate from phosphoenolpyruvate an alpha-D-Glucose
+derivate.</p>
+<p>Glycolysis pathway can be summarized as:
+<code>1 alpha-D-Glucose[c] + 2 NAD+[c] + 2 ADP[c] + 2 Orthophosphate[c] =&gt; 2 Pyruvate[c] + 2 NADH[c] + 2 H+[c] + 2 ATP[c] + 2 H2O[c]</code>
+where the metabolism of one molecule of alpha-D-Glucose yield two
+molecules of pyruvate.</p>
+<p>As is shown below, interrogated glycolysis model estimates a
+production of six molecules of pyruvate by each alpha-D-Glucose molecule
+due a mass unbalance. FBA methods are sensitive to thermodynamic
+(mass-charge) unbalance, so in order to achieve a valid biological
+extrapolation is mandatory to avoid this type of unbalancing in all
+model reactions.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sybil::optimizeProb(glycoModel)</span></span></code></pre></div>
 </div>
 <div id="syntax-validation" class="section level3">
 <h3>Syntax validation</h3>
-<p>The first step for a stoichiometric reactions validation is to check their syntax. Valid stoichiometric reactions must have the following mandatory characteristics:</p>
+<p>The first step for a stoichiometric reactions validation is to check
+their syntax. Valid stoichiometric reactions must have the following
+mandatory characteristics:</p>
 <ul>
-<li>Arrows symbols must be given in the form <code>'=&gt;'</code> or <code>'&lt;=&gt;'</code> (Inverse arrow symbols <code>'&lt;='</code> or other types as: <code>'--&gt;'</code>, <code>'&lt;==&gt;'</code>, <code>'-&gt;'</code> will not be parsed and will lead to errors.)</li>
-<li>Arrow symbols and plus signs (<code>+</code>) must be surrounded by a space character.</li>
-<li>Stoichiometric coefficients must be surrounded by a space character and not by parentheses.</li>
-<li>Each metabolite must have only one stoichiometric coefficient, substituents must be joined to metabolite name by a hyphen (<code>-</code>) symbol.</li>
-<li>Exchange reactions must have only one metabolite before arrow symbol.</li>
-<li>Compartments must be given between square brackets (<code>[compartment]</code>) joined at the end of metabolite name.</li>
+<li>Arrows symbols must be given in the form <code>&#39;=&gt;&#39;</code> or
+<code>&#39;&lt;=&gt;&#39;</code> (Inverse arrow symbols <code>&#39;&lt;=&#39;</code> or
+other types as: <code>&#39;--&gt;&#39;</code>, <code>&#39;&lt;==&gt;&#39;</code>,
+<code>&#39;-&gt;&#39;</code> will not be parsed and will lead to errors.)</li>
+<li>Arrow symbols and plus signs (<code>+</code>) must be surrounded by
+a space character.</li>
+<li>Stoichiometric coefficients must be surrounded by a space character
+and not by parentheses.</li>
+<li>Each metabolite must have only one stoichiometric coefficient,
+substituents must be joined to metabolite name by a hyphen
+(<code>-</code>) symbol.</li>
+<li>Exchange reactions must have only one metabolite before arrow
+symbol.</li>
+<li>Compartments must be given between square brackets
+(<code>[compartment]</code>) joined at the end of metabolite name.</li>
 </ul>
-<p>Syntax validity can be checked through <strong>MINVAL</strong> package using the <code>validateSyntax</code> function which returns a boolean <code>TRUE</code> value if the stoichiometric reaction passes all validations. To validate reactions syntax just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">validateSyntax</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION)
-##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [15] TRUE TRUE TRUE TRUE TRUE</code></pre></div>
+<p>Syntax validity can be checked through <strong>MINVAL</strong>
+package using the <code>validateSyntax</code> function which returns a
+boolean <code>TRUE</code> value if the stoichiometric reaction passes
+all validations. To validate reactions syntax just type:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">validateSyntax</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] TRUE TRUE TRUE TRUE</span></span></code></pre></div>
 </div>
 <div id="mass---charge-balance-validation" class="section level3">
 <h3>Mass - Charge Balance Validation</h3>
-<p>Another step for a stoichiometric reactions validation is to check their mass-charge balance. This process requires the use of a reference with chemical formulas, molecular weights and/or net charges for each metabolite included in the metabolic model.</p>
+<p>Another step for a stoichiometric reactions validation is to check
+their mass-charge balance. This process requires the use of a reference
+with chemical formulas, molecular weights and/or net charges for each
+metabolite included in the metabolic model.</p>
 <div id="chebi-database-download" class="section level4">
 <h4>ChEBI database download</h4>
-<p><strong>MINVAL</strong> package includes the <code>downloadChEBI</code> function that allows the download of different releases of the Chemical Entities of Biological Interest (ChEBI) database, a freely available dictionary of molecular entities focused on ‘small’ chemical compounds involved in biochemical reactions. To download the latest version (this process takes aprox. 2 min with a 5 Mb internet connection) of the ChEBI database just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ChEBI &lt;-<span class="st"> </span><span class="kw">downloadChEBI</span>(<span class="dt">release =</span> <span class="st">&quot;latest&quot;</span>,
-                       <span class="dt">woAssociations =</span> <span class="ot">TRUE</span>
-                       )</code></pre></div>
-<p>Reference also can be user provided. An example of a reference for the glycolysis model is shown below.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">chemicalData &lt;-<span class="st"> </span><span class="kw">read.csv2</span>(<span class="dt">file =</span> <span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;chemData.csv&quot;</span>, 
-                                             <span class="dt">package =</span> <span class="st">&quot;minval&quot;</span>)
-                          )
-<span class="kw">head</span>(chemicalData)
-##                              NAME       FORMULA     MASS CHARGE
-## 1                             H2O           H2O  18.0106      0
-## 2                              H+             H   1.0078      1
-## 3                             ATP C10H16N5O13P3 506.9957      0
-## 4                            NAD+ C21H28N7O14P2 664.1169      1
-## 5 3-Phospho-D-glyceroyl phosphate     C3H8O10P2 265.9593      0
-## 6     beta-D-Fructose 6-phosphate      C6H13O9P 260.0297      0</code></pre></div>
+<p><strong>MINVAL</strong> package includes the
+<code>downloadChEBI</code> function that allows the download of
+different releases of the Chemical Entities of Biological Interest
+(ChEBI) database, a freely available dictionary of molecular entities
+focused on ‘small’ chemical compounds involved in biochemical reactions.
+To download the latest version (this process takes aprox. 2 min with a 5
+Mb internet connection) of the ChEBI database just type:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ChEBI <span class="ot">&lt;-</span> <span class="fu">downloadChEBI</span>(<span class="at">release =</span> <span class="st">&quot;latest&quot;</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">woAssociations =</span> <span class="cn">TRUE</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                       )</span></code></pre></div>
+<p>Reference also can be user provided. An example of a reference for
+the glycolysis model is shown below.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>chemicalData <span class="ot">&lt;-</span> <span class="fu">read.csv2</span>(<span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;chemData.csv&quot;</span>, </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">package =</span> <span class="st">&quot;minval&quot;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                          )</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(chemicalData)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                              NAME       FORMULA     MASS CHARGE</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                             H2O           H2O  18.0106      0</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                              H+             H   1.0078      1</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                             ATP C10H16N5O13P3 506.9957      0</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                            NAD+ C21H28N7O14P2 664.1169      1</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 3-Phospho-D-glyceroyl phosphate     C3H8O10P2 265.9593      0</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     beta-D-Fructose 6-phosphate      C6H13O9P 260.0297      0</span></span></code></pre></div>
 </div>
 <div id="mass-balance-validation" class="section level4">
 <h4>Mass Balance Validation</h4>
-<p>In a balanced stoichiometric reaction according to the <em>Lomonosov-Lavoisier</em> law, the mass comprising the reactants should be the same mass present in the products. If the chemical formula is given, the <code>checkBalance</code> function multiplies the atom numbers by their respective stoichiometric coefficient and establishes if the atomic composition of reactants and products are the same. If the molecular weight is given then the sum of masses of reactants and products are compared. In both cases, a boolean <code>TRUE</code> value is returned if the mass is balanced.</p>
-<p>Mass balance can be tested using the chemical formula or the molecular weight associated to each metabolite as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">checkBalance</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION,
-             <span class="dt">referenceData =</span> chemicalData,
-             <span class="dt">ids =</span> <span class="st">&quot;NAME&quot;</span>,
-             <span class="dt">mFormula =</span> <span class="st">&quot;FORMULA&quot;</span>
-             )
-##  [1]  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-## [12]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</code></pre></div>
-<p>As is shown above, the third stoichiometric reaction is unbalanced. It can be corrected replacing manually the unbalanced reaction as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glycolysis<span class="op">$</span>REACTION[<span class="dv">3</span>] &lt;-<span class="st"> &quot;D-Glyceraldehyde 3-phosphate[c] + Orthophosphate[c] + NAD+[c] &lt;=&gt; 3-Phospho-D-glyceroyl phosphate[c] + NADH[c] + H+[c]&quot;</span>
-
-<span class="kw">checkBalance</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION,
-             <span class="dt">referenceData =</span> chemicalData,
-             <span class="dt">ids =</span> <span class="st">&quot;NAME&quot;</span>,
-             <span class="dt">mWeight =</span> <span class="st">&quot;MASS&quot;</span>
-             )
-##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [15] TRUE TRUE TRUE TRUE TRUE</code></pre></div>
-<p>When all stoichiometric reactions are mass-balanced, then the model can be exported and loaded to be interrogated again:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">writeSBMLmod</span>(<span class="dt">modelData =</span> glycolysis,
-          <span class="dt">modelID =</span> <span class="st">&quot;GlycolysisBalanced&quot;</span>,
-          <span class="dt">outputFile =</span> <span class="st">&quot;glycolysisBalanced.xml&quot;</span>
-          )
-
-<span class="co"># sybil::optimizeProb(sybilSBML::readSBMLmod(&quot;glycolysisBalanced.xml&quot;))</span></code></pre></div>
+<p>In a balanced stoichiometric reaction according to the
+<em>Lomonosov-Lavoisier</em> law, the mass comprising the reactants
+should be the same mass present in the products. If the chemical formula
+is given, the <code>checkBalance</code> function multiplies the atom
+numbers by their respective stoichiometric coefficient and establishes
+if the atomic composition of reactants and products are the same. If the
+molecular weight is given then the sum of masses of reactants and
+products are compared. In both cases, a boolean <code>TRUE</code> value
+is returned if the mass is balanced.</p>
+<p>Mass balance can be tested using the chemical formula or the
+molecular weight associated to each metabolite as follows:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">checkBalance</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">referenceData =</span> chemicalData,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">ids =</span> <span class="st">&quot;NAME&quot;</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">mFormula =</span> <span class="st">&quot;FORMULA&quot;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1]  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [13]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</span></span></code></pre></div>
+<p>As is shown above, the third stoichiometric reaction is unbalanced.
+It can be corrected replacing manually the unbalanced reaction as
+follows:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>glycolysis<span class="sc">$</span>REACTION[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">&quot;D-Glyceraldehyde 3-phosphate[c] + Orthophosphate[c] + NAD+[c] &lt;=&gt; 3-Phospho-D-glyceroyl phosphate[c] + NADH[c] + H+[c]&quot;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">checkBalance</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">referenceData =</span> chemicalData,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">ids =</span> <span class="st">&quot;NAME&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">mWeight =</span> <span class="st">&quot;MASS&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] TRUE TRUE TRUE TRUE</span></span></code></pre></div>
+<p>When all stoichiometric reactions are mass-balanced, then the model
+can be exported and loaded to be interrogated again:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># writeSBMLmod(modelData = glycolysis,</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#           modelID = &quot;GlycolysisBalanced&quot;,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#           outputFile = &quot;glycolysisBalanced.xml&quot;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#           )</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># sybil::optimizeProb(sybilSBML::readSBMLmod(&quot;glycolysisBalanced.xml&quot;))</span></span></code></pre></div>
 </div>
 <div id="charge-balance-validation" class="section level4">
 <h4>Charge Balance Validation</h4>
-<p>Charge balance can be also tested through the <code>checkBalance</code> function using the net charge of metabolites as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">checkBalance</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION,
-             <span class="dt">referenceData =</span> chemicalData,
-             <span class="dt">ids =</span> <span class="st">&quot;NAME&quot;</span>,
-             <span class="dt">mCharge =</span> <span class="st">&quot;CHARGE&quot;</span>
-             )
-##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [15] TRUE TRUE TRUE TRUE TRUE</code></pre></div>
+<p>Charge balance can be also tested through the
+<code>checkBalance</code> function using the net charge of metabolites
+as follows:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">checkBalance</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">referenceData =</span> chemicalData,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">ids =</span> <span class="st">&quot;NAME&quot;</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">mCharge =</span> <span class="st">&quot;CHARGE&quot;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] TRUE TRUE TRUE TRUE</span></span></code></pre></div>
 </div>
 </div>
 <div id="characterize-model" class="section level3">
 <h3>Characterize model</h3>
 <div id="stoichiometric-matrix" class="section level4">
 <h4>Stoichiometric matrix</h4>
-<p>A metabolic model is often represented in a more compact form called the stoichiometry matrix (<em>S</em>). If a metabolic model has <em>n</em> reactions and <em>m</em> participating metabolites, then the stoichiometry matrix will have correspondingly <em>m</em> rows and <em>n</em> columns. Values in the stoichiometric matrix represent the metabolites coefficients in each reaction. To generate the stoichiometric matrix just type:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stoichiometricMatrix</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION)
-##                                      reactions
-## metabolites                           R01 R02 R03 R04 R05 R06 R07 R08 R09
-##   2-Phospho-D-glycerate[c]             -1   0   0   0   0  -1   0   0   0
-##   Phosphoenolpyruvate[c]                1   0   0   0   0   0   0   0   0
-##   H2O[c]                                1   0   0   0   0   0   0   0   0
-##   D-Glyceraldehyde 3-phosphate[c]       0  -1  -1   1   0   0   0   0   0
-##   Glycerone phosphate[c]                0   1   0   1   0   0   0   0   0
-##   Orthophosphate[c]                     0   0  -1   0   0   0   0   0   0
-##   NAD+[c]                               0   0  -1   0   0   0   0   0   0
-##   3-Phospho-D-glyceroyl phosphate[c]    0   0   1   0   1   0   0   0   0
-##   NADH[c]                               0   0   1   0   0   0   0   0   0
-##   H+[c]                                 0   0   1   0   0   0   0   0   0
-##   beta-D-Fructose 1,6-bisphosphate[c]   0   0   0  -1   0   0   0   0   1
-##   ATP[c]                                0   0   0   0  -1   0  -1   0  -1
-##   3-Phospho-D-glycerate[c]              0   0   0   0  -1   1   0   0   0
-##   ADP[c]                                0   0   0   0   1   0   1   0   1
-##   alpha-D-Glucose[c]                    0   0   0   0   0   0  -1   0   0
-##   alpha-D-Glucose 6-phosphate[c]        0   0   0   0   0   0   1  -1   0
-##   beta-D-Fructose 6-phosphate[c]        0   0   0   0   0   0   0   1  -1
-##   Pyruvate[c]                           0   0   0   0   0   0   0   0   0
-##                                      reactions
-## metabolites                           R10 R11 R12 R13 R14 R15 R16 R17 R18
-##   2-Phospho-D-glycerate[c]              0   0   0   0   0   0   0   0   0
-##   Phosphoenolpyruvate[c]               -1   0   0   0   0   0   0   0   0
-##   H2O[c]                                0  -1   0   0   0   0   0   0   0
-##   D-Glyceraldehyde 3-phosphate[c]       0   0   0   0   0   0   0   0   0
-##   Glycerone phosphate[c]                0   0   0   0   0   0   0   0   0
-##   Orthophosphate[c]                     0   0   0   0  -1   0   0   0   0
-##   NAD+[c]                               0   0  -1   0   0   0   0   0   0
-##   3-Phospho-D-glyceroyl phosphate[c]    0   0   0   0   0   0   0   0   0
-##   NADH[c]                               0   0   0  -1   0   0   0   0   0
-##   H+[c]                                 0   0   0   0   0  -1   0   0   0
-##   beta-D-Fructose 1,6-bisphosphate[c]   0   0   0   0   0   0   0   0   0
-##   ATP[c]                                1   0   0   0   0   0  -1   0   0
-##   3-Phospho-D-glycerate[c]              0   0   0   0   0   0   0   0   0
-##   ADP[c]                               -1   0   0   0   0   0   0   0   0
-##   alpha-D-Glucose[c]                    0   0   0   0   0   0   0  -1   0
-##   alpha-D-Glucose 6-phosphate[c]        0   0   0   0   0   0   0   0   0
-##   beta-D-Fructose 6-phosphate[c]        0   0   0   0   0   0   0   0   0
-##   Pyruvate[c]                           1   0   0   0   0   0   0   0  -1
-##                                      reactions
-## metabolites                           R19
-##   2-Phospho-D-glycerate[c]              0
-##   Phosphoenolpyruvate[c]                0
-##   H2O[c]                                0
-##   D-Glyceraldehyde 3-phosphate[c]       0
-##   Glycerone phosphate[c]                0
-##   Orthophosphate[c]                     0
-##   NAD+[c]                               0
-##   3-Phospho-D-glyceroyl phosphate[c]    0
-##   NADH[c]                               0
-##   H+[c]                                 0
-##   beta-D-Fructose 1,6-bisphosphate[c]   0
-##   ATP[c]                                0
-##   3-Phospho-D-glycerate[c]              0
-##   ADP[c]                               -1
-##   alpha-D-Glucose[c]                    0
-##   alpha-D-Glucose 6-phosphate[c]        0
-##   beta-D-Fructose 6-phosphate[c]        0
-##   Pyruvate[c]                           0</code></pre></div>
+<p>A metabolic model is often represented in a more compact form called
+the stoichiometry matrix (<em>S</em>). If a metabolic model has
+<em>n</em> reactions and <em>m</em> participating metabolites, then the
+stoichiometry matrix will have correspondingly <em>m</em> rows and
+<em>n</em> columns. Values in the stoichiometric matrix represent the
+metabolites coefficients in each reaction. To generate the
+stoichiometric matrix just type:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stoichiometricMatrix</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                                      reactions</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">## metabolites                           R01 R02 R03 R04 R05 R06 R07 R08 R09 R10</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="do">##   2-Phospho-D-glycerate[c]             -1   0   0   0   0  -1   0   0   0   0</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="do">##   Phosphoenolpyruvate[c]                1   0   0   0   0   0   0   0   0  -1</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   H2O[c]                                1   0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   D-Glyceraldehyde 3-phosphate[c]       0  -1  -1   1   0   0   0   0   0   0</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="do">##   Glycerone phosphate[c]                0   1   0   1   0   0   0   0   0   0</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="do">##   Orthophosphate[c]                     0   0  -1   0   0   0   0   0   0   0</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   NAD+[c]                               0   0  -1   0   0   0   0   0   0   0</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="do">##   3-Phospho-D-glyceroyl phosphate[c]    0   0   1   0   1   0   0   0   0   0</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   NADH[c]                               0   0   1   0   0   0   0   0   0   0</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   H+[c]                                 0   0   1   0   0   0   0   0   0   0</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   beta-D-Fructose 1,6-bisphosphate[c]   0   0   0  -1   0   0   0   0   1   0</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="do">##   ATP[c]                                0   0   0   0  -1   0  -1   0  -1   1</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   3-Phospho-D-glycerate[c]              0   0   0   0  -1   1   0   0   0   0</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   ADP[c]                                0   0   0   0   1   0   1   0   1  -1</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="do">##   alpha-D-Glucose[c]                    0   0   0   0   0   0  -1   0   0   0</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="do">##   alpha-D-Glucose 6-phosphate[c]        0   0   0   0   0   0   1  -1   0   0</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="do">##   beta-D-Fructose 6-phosphate[c]        0   0   0   0   0   0   0   1  -1   0</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="do">##   Pyruvate[c]                           0   0   0   0   0   0   0   0   0   1</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="do">##                                      reactions</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="do">## metabolites                           R11 R12 R13 R14 R15 R16 R17 R18 R19</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="do">##   2-Phospho-D-glycerate[c]              0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="do">##   Phosphoenolpyruvate[c]                0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="do">##   H2O[c]                               -1   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="do">##   D-Glyceraldehyde 3-phosphate[c]       0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="do">##   Glycerone phosphate[c]                0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="do">##   Orthophosphate[c]                     0   0   0  -1   0   0   0   0   0</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="do">##   NAD+[c]                               0  -1   0   0   0   0   0   0   0</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="do">##   3-Phospho-D-glyceroyl phosphate[c]    0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="do">##   NADH[c]                               0   0  -1   0   0   0   0   0   0</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="do">##   H+[c]                                 0   0   0   0  -1   0   0   0   0</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="do">##   beta-D-Fructose 1,6-bisphosphate[c]   0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="do">##   ATP[c]                                0   0   0   0   0  -1   0   0   0</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="do">##   3-Phospho-D-glycerate[c]              0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="do">##   ADP[c]                                0   0   0   0   0   0   0   0  -1</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="do">##   alpha-D-Glucose[c]                    0   0   0   0   0   0  -1   0   0</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="do">##   alpha-D-Glucose 6-phosphate[c]        0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="do">##   beta-D-Fructose 6-phosphate[c]        0   0   0   0   0   0   0   0   0</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="do">##   Pyruvate[c]                           0   0   0   0   0   0   0  -1   0</span></span></code></pre></div>
 </div>
 <div id="metabolites" class="section level4">
 <h4>Metabolites</h4>
-<p>The <code>metabolites</code> function automatically identifies and return all metabolites (with or without compartments) for a specific or a set of stoichiometric reactions. Some FBA implementations require the list of all metabolites included in the metabolic reconstruction as an independent section of the human-readable input model.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">metabolites</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION)
-##  [1] &quot;2-Phospho-D-glycerate[c]&quot;           
-##  [2] &quot;Phosphoenolpyruvate[c]&quot;             
-##  [3] &quot;H2O[c]&quot;                             
-##  [4] &quot;D-Glyceraldehyde 3-phosphate[c]&quot;    
-##  [5] &quot;Glycerone phosphate[c]&quot;             
-##  [6] &quot;Orthophosphate[c]&quot;                  
-##  [7] &quot;NAD+[c]&quot;                            
-##  [8] &quot;3-Phospho-D-glyceroyl phosphate[c]&quot; 
-##  [9] &quot;NADH[c]&quot;                            
-## [10] &quot;H+[c]&quot;                              
-## [11] &quot;beta-D-Fructose 1,6-bisphosphate[c]&quot;
-## [12] &quot;ATP[c]&quot;                             
-## [13] &quot;3-Phospho-D-glycerate[c]&quot;           
-## [14] &quot;ADP[c]&quot;                             
-## [15] &quot;alpha-D-Glucose[c]&quot;                 
-## [16] &quot;alpha-D-Glucose 6-phosphate[c]&quot;     
-## [17] &quot;beta-D-Fructose 6-phosphate[c]&quot;     
-## [18] &quot;Pyruvate[c]&quot;</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">metabolites</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION,
-            <span class="dt">woCompartment =</span> <span class="ot">TRUE</span>)
-##  [1] &quot;2-Phospho-D-glycerate&quot;            &quot;Phosphoenolpyruvate&quot;             
-##  [3] &quot;H2O&quot;                              &quot;D-Glyceraldehyde 3-phosphate&quot;    
-##  [5] &quot;Glycerone phosphate&quot;              &quot;Orthophosphate&quot;                  
-##  [7] &quot;NAD+&quot;                             &quot;3-Phospho-D-glyceroyl phosphate&quot; 
-##  [9] &quot;NADH&quot;                             &quot;H+&quot;                              
-## [11] &quot;beta-D-Fructose 1,6-bisphosphate&quot; &quot;ATP&quot;                             
-## [13] &quot;3-Phospho-D-glycerate&quot;            &quot;ADP&quot;                             
-## [15] &quot;alpha-D-Glucose&quot;                  &quot;alpha-D-Glucose 6-phosphate&quot;     
-## [17] &quot;beta-D-Fructose 6-phosphate&quot;      &quot;Pyruvate&quot;</code></pre></div>
+<p>The <code>metabolites</code> function automatically identifies and
+return all metabolites (with or without compartments) for a specific or
+a set of stoichiometric reactions. Some FBA implementations require the
+list of all metabolites included in the metabolic reconstruction as an
+independent section of the human-readable input model.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metabolites</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;2-Phospho-D-glycerate[c]&quot;            &quot;Phosphoenolpyruvate[c]&quot;             </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] &quot;H2O[c]&quot;                              &quot;D-Glyceraldehyde 3-phosphate[c]&quot;    </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] &quot;Glycerone phosphate[c]&quot;              &quot;Orthophosphate[c]&quot;                  </span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] &quot;NAD+[c]&quot;                             &quot;3-Phospho-D-glyceroyl phosphate[c]&quot; </span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] &quot;NADH[c]&quot;                             &quot;H+[c]&quot;                              </span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] &quot;beta-D-Fructose 1,6-bisphosphate[c]&quot; &quot;ATP[c]&quot;                             </span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] &quot;3-Phospho-D-glycerate[c]&quot;            &quot;ADP[c]&quot;                             </span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] &quot;alpha-D-Glucose[c]&quot;                  &quot;alpha-D-Glucose 6-phosphate[c]&quot;     </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] &quot;beta-D-Fructose 6-phosphate[c]&quot;      &quot;Pyruvate[c]&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metabolites</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">woCompartment =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;2-Phospho-D-glycerate&quot;            &quot;Phosphoenolpyruvate&quot;             </span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] &quot;H2O&quot;                              &quot;D-Glyceraldehyde 3-phosphate&quot;    </span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] &quot;Glycerone phosphate&quot;              &quot;Orthophosphate&quot;                  </span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] &quot;NAD+&quot;                             &quot;3-Phospho-D-glyceroyl phosphate&quot; </span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] &quot;NADH&quot;                             &quot;H+&quot;                              </span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] &quot;beta-D-Fructose 1,6-bisphosphate&quot; &quot;ATP&quot;                             </span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] &quot;3-Phospho-D-glycerate&quot;            &quot;ADP&quot;                             </span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] &quot;alpha-D-Glucose&quot;                  &quot;alpha-D-Glucose 6-phosphate&quot;     </span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] &quot;beta-D-Fructose 6-phosphate&quot;      &quot;Pyruvate&quot;</span></span></code></pre></div>
 </div>
 <div id="compartments" class="section level4">
 <h4>Compartments</h4>
-<p>As well as in cells, in which not all reactions occur in all compartments, stoichiometric reactions in a metabolic reconstruction can be labeled to be restricted to a single compartment during FBA through the assignment of a compartment label at the end of each metabolite name. Some FBA implementations require the list of all compartments included in the metabolic reconstruction as an independent section of the human-readable input file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">compartments</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION)
-## [1] &quot;c&quot;</code></pre></div>
+<p>As well as in cells, in which not all reactions occur in all
+compartments, stoichiometric reactions in a metabolic reconstruction can
+be labeled to be restricted to a single compartment during FBA through
+the assignment of a compartment label at the end of each metabolite
+name. Some FBA implementations require the list of all compartments
+included in the metabolic reconstruction as an independent section of
+the human-readable input file.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compartments</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;c&quot;</span></span></code></pre></div>
 </div>
 <div id="orphanmetabolites" class="section level4">
 <h4>OrphanMetabolites</h4>
-<p><code>orphanMetabolites</code> or compounds that are not produced or consumed in any other reaction are one of the main causes of mass accumulation in metabolic reconstructions. The <code>orphanReactants</code> function identifies compounds that are not produced internally by any other reaction and should be added to the reconstruction, for instance, as an exchange reaction while the <code>orphanProducts</code> function identifies compounds that are not consumed internally by any other reaction and should be added to the reconstruction as a sink reaction.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">orphanMetabolites</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])
-## [1] &quot;alpha-D-Glucose[c]&quot; &quot;Pyruvate[c]&quot;        &quot;H+[c]&quot;             
-## [4] &quot;H2O[c]&quot;             &quot;NAD+[c]&quot;            &quot;NADH[c]&quot;           
-## [7] &quot;Orthophosphate[c]&quot;</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">orphanReactants</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])
-## [1] &quot;alpha-D-Glucose[c]&quot; &quot;H+[c]&quot;              &quot;H2O[c]&quot;            
-## [4] &quot;NAD+[c]&quot;            &quot;NADH[c]&quot;            &quot;Orthophosphate[c]&quot;
-<span class="kw">orphanProducts</span>(<span class="dt">reactionList =</span> glycolysis<span class="op">$</span>REACTION[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])
-## [1] &quot;Pyruvate[c]&quot;       &quot;H+[c]&quot;             &quot;H2O[c]&quot;           
-## [4] &quot;NAD+[c]&quot;           &quot;NADH[c]&quot;           &quot;Orthophosphate[c]&quot;</code></pre></div>
+<p><code>orphanMetabolites</code> or compounds that are not produced or
+consumed in any other reaction are one of the main causes of mass
+accumulation in metabolic reconstructions. The
+<code>orphanReactants</code> function identifies compounds that are not
+produced internally by any other reaction and should be added to the
+reconstruction, for instance, as an exchange reaction while the
+<code>orphanProducts</code> function identifies compounds that are not
+consumed internally by any other reaction and should be added to the
+reconstruction as a sink reaction.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">orphanMetabolites</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;alpha-D-Glucose[c]&quot; &quot;Pyruvate[c]&quot;        &quot;H+[c]&quot;             </span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [4] &quot;H2O[c]&quot;             &quot;NAD+[c]&quot;            &quot;NADH[c]&quot;           </span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [7] &quot;Orthophosphate[c]&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">orphanReactants</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;alpha-D-Glucose[c]&quot; &quot;H+[c]&quot;              &quot;H2O[c]&quot;            </span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [4] &quot;NAD+[c]&quot;            &quot;NADH[c]&quot;            &quot;Orthophosphate[c]&quot;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">orphanProducts</span>(<span class="at">reactionList =</span> glycolysis<span class="sc">$</span>REACTION[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Pyruvate[c]&quot;       &quot;H+[c]&quot;             &quot;H2O[c]&quot;           </span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [4] &quot;NAD+[c]&quot;           &quot;NADH[c]&quot;           &quot;Orthophosphate[c]&quot;</span></span></code></pre></div>
 </div>
 </div>
 <div id="tsv-files" class="section level3">
 <h3>TSV files</h3>
-<p>The function <code>writeTSVmod</code> writes a metabolic model in three text files, following a character-separated value format. Each line contains one entry; the default value separator is a tab. TSV models are the default input format for the <code>sybil</code> R package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">writeTSVmod</span>(<span class="dt">modelData =</span> glycolysis,
-          <span class="dt">modelID =</span> <span class="st">&quot;Glycolysis&quot;</span>,
-          <span class="dt">outputFile =</span> <span class="st">&quot;glycolysis&quot;</span>
-          )
-
-sybil<span class="op">::</span><span class="kw">readTSVmod</span>(<span class="dt">prefix =</span> <span class="st">&quot;glycolysis&quot;</span>,<span class="dt">quoteChar =</span> <span class="st">&quot;</span><span class="ch">\&quot;</span><span class="st">&quot;</span>)
-## model name:             Glycolysis 
-## number of compartments  1 
-##                         [c] 
-## number of reactions:    19 
-## number of metabolites:  18 
-## number of unique genes: 22 
-## objective function:     +1 R00200</code></pre></div>
+<p>The function <code>writeTSVmod</code> writes a metabolic model in
+three text files, following a character-separated value format. Each
+line contains one entry; the default value separator is a tab. TSV
+models are the default input format for the <code>sybil</code> R
+package.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># writeTSVmod(modelData = glycolysis,</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#           modelID = &quot;Glycolysis&quot;,</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#           outputFile = &quot;glycolysis&quot;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#           )</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># sybil::readTSVmod(prefix = &quot;glycolysis&quot;,quoteChar = &quot;\&quot;&quot;)</span></span></code></pre></div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

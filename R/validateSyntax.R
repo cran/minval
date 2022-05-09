@@ -1,4 +1,5 @@
 #' @export validateSyntax
+#' @importFrom stats na.omit
 #' @author Daniel Camilo Osorio <dcosorioh@tamu.edu>
 # Bioinformatics and Systems Biology Lab      | Universidad Nacional de Colombia
 # Experimental and Computational Biochemistry | Pontificia Universidad Javeriana
@@ -93,9 +94,9 @@ validateSyntax <- function(reactionList) {
     c(valid.syntax, unlist(lapply(reactionList, function(reaction) {
       if (length(metabolites(reaction)) > 0) {
         left <- metabolites(unlist(getLeft(reaction)))
-        left <- length(left[!(is.null(left) || is.na(left))])
+        left <- length(na.omit(left))
         right <- metabolites(unlist(getRight(reaction)))
-        right <- length(right[!(is.null(right) || is.na(right))])
+        right <- length(na.omit(right))
         return(!(left >= 1 & right > 0 | left == 1 & right == 0))
       } else {
         return(FALSE)
@@ -197,8 +198,7 @@ validateSyntax <- function(reactionList) {
   # Return
   if (any(valid.syntax == TRUE)) {
     message(
-      "Please check that:\n* Arrows symbols are given in the form '=>' or '<=>'\n* Inverse arrow symbols '<=' or other types such as: '-->', '<==>' or '->' are not present\n* Arrows and plus signs are surrounded by a space character\n* Stoichiometric coefficients are surrounded by spaces and not by parentheses\n* Exchange reactions have only one metabolite before arrow symbol\n* Compartments are given between square brackets (metabolite[compartment]) joined at the end of metabolite name",
-      call. = FALSE
+      "Please check that:\n* Arrows symbols are given in the form '=>' or '<=>'\n* Inverse arrow symbols '<=' or other types such as: '-->', '<==>' or '->' are not present\n* Arrows and plus signs are surrounded by a space character\n* Stoichiometric coefficients are surrounded by spaces and not by parentheses\n* Exchange reactions have only one metabolite before arrow symbol\n* Compartments are given between square brackets (metabolite[compartment]) joined at the end of metabolite name"
     )
   }
   return(sapply(seq_along(reactionList), function(reaction) {

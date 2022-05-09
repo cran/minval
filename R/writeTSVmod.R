@@ -36,10 +36,10 @@
 #' #' # Loading a metabolic model
 #' glycolysis <- read.csv(system.file("extdata/glycolysisModel.csv",package = "minval"), sep='\t')
 #'
+#' \dontrun{
 #' # Writing a model in TSV format
 #' writeTSVmod(modelData = glycolysis,modelID = "Glycolysis",outputFile = "glycolysis")
 #' 
-#' \dontrun{
 #' # Writing a modelOrg object in a SBML format
 #' ## Loading the sybil R package
 #' library(sybil)
@@ -49,20 +49,21 @@
 #' 
 #' ## Writing the modelOrg object in a SBML format
 #' writeTSVmod(modelData = Ec_core,modelID = "E.coli",outputFile = "eColi")
-#' }
+#'}
+
 writeTSVmod <-
   function (modelData,
             modelID = "model",
             outputFile,
             boundary = "b") {
-    if (class(modelData) == "data.frame") {
+    if (is(modelData, "data.frame")) {
       # Check valid structure, column names and valid ID's
       modelData <- validateData(modelData = modelData)
       # Remove comments
       modelData <- removeComments(modelData = modelData)
       # Validate stoichiometric syntax
       modelData <- modelData[validateSyntax(modelData[["REACTION"]]), ]
-    } else if (class(modelData) == "modelorg") {
+    } else if (is(modelData, "modelorg")) {
       modelData <- convertData(model = modelData)
     } else {
       stop("Input format not supported.")

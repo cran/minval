@@ -71,14 +71,14 @@ downloadChEBI <- function(release = "latest",
   message("Downloading compounds ... ", appendLF = FALSE)
   download.file(paste0(ftp, "compounds.tsv.gz"),
                 paste0(chebi_download, "compounds.tsv"),
-                quiet = TRUE)
-  compounds <-
-    as.data.frame.array(read.delim2(paste0(chebi_download, "compounds.tsv")))
+                quiet = TRUE, method = "libcurl")
+  compounds <- suppressWarnings(
+    as.data.frame.array(read.delim2(paste0(chebi_download, "compounds.tsv"))))
   message("DONE", appendLF = TRUE)
   message("Downloading synonyms ... ", appendLF = FALSE)
   download.file(paste0(ftp, "names.tsv.gz"),
                 paste0(chebi_download, "names.tsv"),
-                quiet = TRUE)
+                quiet = TRUE, method = "libcurl")
   names <-
     suppressWarnings(as.data.frame.array(read.delim2(paste0(
       chebi_download, "names.tsv"
@@ -87,7 +87,7 @@ downloadChEBI <- function(release = "latest",
   message("Downloading formulas ... ", appendLF = FALSE)
   download.file(paste0(ftp, "chemical_data.tsv"),
                 paste0(chebi_download, "formulas.tsv"),
-                quiet = TRUE)
+                quiet = TRUE, method = "libcurl")
   formulas <-
     suppressWarnings(as.data.frame.array(read.delim2(
       paste0(chebi_download, "formulas.tsv")
@@ -106,7 +106,10 @@ downloadChEBI <- function(release = "latest",
     by.y = "ID"
   )
   compounds <- rbind(latest, old[, c("ID", "NAME")])
-  compounds[compounds[, "NAME"] == "null", "NAME"] <- NA
+  
+  if(any(sapply(compounds[, "NAME"] == "null", isTRUE))){
+    compounds[compounds[, "NAME"] == "null", "NAME"] <- NA
+  }
   compounds <- compounds[complete.cases(compounds), ]
   DB <-
     suppressWarnings((

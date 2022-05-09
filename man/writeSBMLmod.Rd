@@ -45,12 +45,13 @@ This function converts a data.frame or a modelOrg object to a valid SBML file. T
 }
 \examples{
 # Loading a metabolic model
-glycolysis <- read.csv(system.file("extdata/glycolysisModel.csv",package = "minval"), sep='\\t')
+glycolysis <- read.csv(system.file("extdata/glycolysisModel.csv",package = "minval"), sep='\t')
 
+\dontrun{
 # Writing a model in SBML format
 writeSBMLmod(modelData = glycolysis,modelID = "Glycolysis",outputFile = "glycolysis.xml")
 
-\dontrun{
+
 # Writing a modelOrg object in a SBML format
 ## Loading the sybil R package
 library(sybil)
